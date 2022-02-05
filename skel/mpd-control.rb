@@ -1,17 +1,17 @@
 
-class CmusControl < Formula
-  desc "Control cmus with Media Keys << > >> under OS X"
+class MPDControl < Formula
+  desc "Control mpd with Media Keys << > >> under OS X"
   homepage "https://blog.fox21.at/2015/11/20/control-cmus-with-media-keys.html"
   url "https://dev.fox21.at/cmus-control/releases/%FILENAME%"
   sha256 "%SHA256%"
 
   depends_on "cmake" => :build
-  depends_on "cmus" => :run
+  depends_on "mpd" => :run
 
   def install
     system "make", "build/release"
 
-    bin.install "build/release/bin/cmuscontrold"
+    bin.install "build/release/bin/mpdcontrold"
   end
 
   def caveats; <<-EOS.undent
@@ -25,7 +25,7 @@ class CmusControl < Formula
     EOS
   end
 
-  plist_options :startup => true, :manual => "cmuscontrold"
+  plist_options :startup => true, :manual => "mpdcontrold"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
@@ -36,7 +36,7 @@ class CmusControl < Formula
 
         <key>ProgramArguments</key>
         <array>
-        <string>#{opt_bin}/cmuscontrold</string>
+        <string>#{opt_bin}/mpdcontrold</string>
         </array>
 
         <key>EnvironmentVariables</key>
@@ -58,6 +58,6 @@ class CmusControl < Formula
   end
 
   test do
-    system "which", "-a", "cmuscontrold"
+    system "which", "-a", "mpdcontrold"
   end
 end

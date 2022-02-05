@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
-project(CmusControl)
+project(MPDControl)
 
-set(PROJECT_RELEASE_ID 4)
-set(PROJECT_VERSION_MAJOR 1)
+set(PROJECT_RELEASE_ID 1)
+set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_VERSION_MINOR 1)
 set(PROJECT_VERSION_PATCH 0)
 set(PROJECT_VERSION_APPENDIX "")
@@ -32,7 +32,7 @@ else()
 endif()
 
 configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${PROJECT_BINARY_DIR}/src/config.h" NEWLINE_STYLE LF)
-configure_file("${PROJECT_SOURCE_DIR}/skel/at.fox21.cmuscontrold.plist" "${PROJECT_BINARY_DIR}/skel/at.fox21.cmuscontrold.plist" NEWLINE_STYLE LF)
+configure_file("${PROJECT_SOURCE_DIR}/skel/at.fox21.mpdcontrold.plist" "${PROJECT_BINARY_DIR}/skel/at.fox21.mpdcontrold.plist" NEWLINE_STYLE LF)
 
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.m")
 
@@ -49,34 +49,34 @@ include_directories("${PROJECT_BINARY_DIR}/src")
 FIND_LIBRARY(FOUNDATION_LIBRARY Foundation)
 FIND_LIBRARY(APPKIT_LIBRARY AppKit)
 
-add_executable(cmuscontrold
+add_executable(mpdcontrold
 	src/main.m
 	src/classes/CCApplication.m
 	)
-target_link_libraries(cmuscontrold ${FOUNDATION_LIBRARY})
-target_link_libraries(cmuscontrold ${APPKIT_LIBRARY})
+target_link_libraries(mpdcontrold ${FOUNDATION_LIBRARY})
+target_link_libraries(mpdcontrold ${APPKIT_LIBRARY})
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-	add_custom_command(TARGET cmuscontrold POST_BUILD COMMAND strip ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cmuscontrold)
+	add_custom_command(TARGET mpdcontrold POST_BUILD COMMAND strip ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/mpdcontrold)
 endif()
 
-install(TARGETS cmuscontrold
+install(TARGETS mpdcontrold
 	PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 	RUNTIME DESTINATION ${PROJECT_INSTALL_BIN_DST_PATH}
 	CONFIGURATIONS Release)
 
-install(FILES "${PROJECT_BINARY_DIR}/skel/at.fox21.cmuscontrold.plist"
+install(FILES "${PROJECT_BINARY_DIR}/skel/at.fox21.mpdcontrold.plist"
 	PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 	DESTINATION ${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}
 	CONFIGURATIONS Release)
 
 add_custom_target(uninstall
-	COMMAND rm -vf "${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}/at.fox21.cmuscontrold.plist"
-	COMMAND rm -vf "${PROJECT_INSTALL_BIN_DST_PATH}/cmuscontrold"
+	COMMAND rm -vf "${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}/at.fox21.mpdcontrold.plist"
+	COMMAND rm -vf "${PROJECT_INSTALL_BIN_DST_PATH}/mpdcontrold"
 	)
 
-add_custom_target(launchctl_load   COMMAND launchctl load   "${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}/at.fox21.cmuscontrold.plist")
-add_custom_target(launchctl_unload COMMAND launchctl unload "${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}/at.fox21.cmuscontrold.plist")
+add_custom_target(launchctl_load   COMMAND launchctl load "${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}/at.fox21.mpdcontrold.plist")
+add_custom_target(launchctl_unload COMMAND launchctl unload "${PROJECT_INSTALL_LAUNCHAGENTS_DST_PATH}/at.fox21.mpdcontrold.plist")
 
 
 MESSAGE("")
